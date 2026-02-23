@@ -40,7 +40,45 @@ class DiceRoller():
         self.rand = customRandom
         self.diceRollerData = DiceRollerData()
 
+    def validate(self, expression: str) -> None:
+        """Raise ValueError if the dice expression is invalid."""
+        # Supported format for expression:
+        # <dice_count>[d|D]<dice_type>[+|-<modifier>]
+        # Where:
+        #   - dice_count is a positive integer (>= 1)
+        #   - dice_type is a positive integer (>= 1)
+        #   - modifier is an integer (optional, can be negative)
+        #   - "d" can be both lowercase or uppercase
+        #
+        # Valid Input Examples:
+        # "1d6"
+        # "2d8"
+        # "10d20"
+        # "1d6+2"
+        # "3d4-1"
+        # "100d100+999"
+        # " 1d6+2 " (whitespace allowed outside of expression)
+        #
+        # Invalid Input Examples:
+        # "d6"
+        # "2d"
+        # "2x6"
+        # "2dd6"
+        # "2d6d4"
+        # "abc"
+        # ""
+        # "0d6" (count must be >= 1)
+        # "-1d6" (count must be >= 1)
+        # "1d0" (type must be >= 1)
+        # "1d-6" (type must be >= 1)
+        # "1d6+" (modifier violation)
+        # "1d6+-2" (modifier violation)
+        # "1d6--2" (modifier violation)
+        # "1d6 + 2" (whitespace not allowed inside expression)
+        pass
+
     def roll(self, roll: str) -> int:
+        self.validate(roll)
         self.diceRollerData.clear()
         dice_count = self.parse_dice_count(roll)
         dice_type = self.parse_dice_type(roll)
