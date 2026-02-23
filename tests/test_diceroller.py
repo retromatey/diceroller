@@ -1,5 +1,5 @@
 from typing import override
-from diceroller import DiceRoller, CustomRandom
+from diceroller.core import DiceRoller, CustomRandom
 import pytest
 
 class CustomRandomMoc(CustomRandom):
@@ -13,53 +13,20 @@ class CustomRandomMoc(CustomRandom):
     def randint(self, start: int, end: int) -> int:
         return self.randint_return_value
 
-def test_roll_no_modifier():
+@pytest.mark.parametrize(
+    "expression, mock_value, expected",
+    [
+        ("1d6", 3, 3),
+        ("2d6", 3, 6),
+        ("2d6-3", 3, 3),
+        ("2d6+3", 3, 9),
+    ],
+)
+def test_roll_valid_cases(expression, mock_value, expected):
     moc = CustomRandomMoc()
-    moc.randint_returns(1)
+    moc.randint_returns(mock_value)
     dr = DiceRoller(moc)
-    test_case = "1d6"
-    test_result = dr.roll(test_case)
-    expected = 1 
-    msg = f"Expected: {expected}, Actual: {test_result}"
-    assert test_result == expected, msg
-
-def test_roll_positive_modifier():
-    moc = CustomRandomMoc()
-    moc.randint_returns(1)
-    dr = DiceRoller(moc)
-    test_case = "1d6+2"
-    test_result = dr.roll(test_case)
-    expected = 3
-    msg = f"Expected: {expected}, Actual: {test_result}"
-    assert test_result == expected, msg
-
-def test_roll_negative_modifier():
-    moc = CustomRandomMoc()
-    moc.randint_returns(2)
-    dr = DiceRoller(moc)
-    test_case = "1d6-2"
-    test_result = dr.roll(test_case)
-    expected = 0
-    msg = f"Expected: {expected}, Actual: {test_result}"
-    assert test_result == expected, msg
-
-def test_roll_multiple_dice():
-    moc = CustomRandomMoc()
-    moc.randint_returns(2)
-    dr = DiceRoller(moc)
-    test_case = "2d6"
-    test_result = dr.roll(test_case)
-    expected = 4 
-    msg = f"Expected: {expected}, Actual: {test_result}"
-    assert test_result == expected, msg
-
-def test_roll_multiple_dice_with_modifier():
-    moc = CustomRandomMoc()
-    moc.randint_returns(2)
-    dr = DiceRoller(moc)
-    test_case = "2d6+2"
-    test_result = dr.roll(test_case)
-    expected = 6 
+    test_result = dr.roll(expression)
     msg = f"Expected: {expected}, Actual: {test_result}"
     assert test_result == expected, msg
 

@@ -28,9 +28,9 @@ class DiceRollerData():
         result = ""
         modifier_str = ""
         if self.modifier > 0:
-            modifier_str = f" +{self.modifier} "
+            modifier_str = f"+{self.modifier} "
         elif self.modifier < 0:
-            modifier_str = f" {self.modifier} "
+            modifier_str = f"{self.modifier} "
         for roll in self.rolls:
             result += f"{roll} "
         result = f"{self.total} ( {result}{modifier_str})"
@@ -40,6 +40,10 @@ class DiceRoller():
     def __init__(self, customRandom = None):
         self.rand = customRandom or CustomRandom()
         self.diceRollerData = DiceRollerData()
+
+    @property
+    def data(self):
+        return self.diceRollerData
 
     def validate(self, expression: str) -> tuple[int, int, int]:
         """Raise ValueError if the dice expression is invalid."""
