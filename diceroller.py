@@ -1,4 +1,6 @@
 import random
+import re
+import re
 
 class CustomRandom():
     def __init__(self):
@@ -49,33 +51,24 @@ class DiceRoller():
         #   - dice_type is a positive integer (>= 1)
         #   - modifier is an integer (optional, can be negative)
         #   - "d" can be both lowercase or uppercase
-        #
-        # Valid Input Examples:
-        # "1d6"
-        # "2d8"
-        # "10d20"
-        # "1d6+2"
-        # "3d4-1"
-        # "100d100+999"
-        # " 1d6+2 " (whitespace allowed outside of expression)
-        #
-        # Invalid Input Examples:
-        # "d6"
-        # "2d"
-        # "2x6"
-        # "2dd6"
-        # "2d6d4"
-        # "abc"
-        # ""
-        # "0d6" (count must be >= 1)
-        # "-1d6" (count must be >= 1)
-        # "1d0" (type must be >= 1)
-        # "1d-6" (type must be >= 1)
-        # "1d6+" (modifier violation)
-        # "1d6+-2" (modifier violation)
-        # "1d6--2" (modifier violation)
-        # "1d6 + 2" (whitespace not allowed inside expression)
-        pass
+        trimmed = expression.strip()
+        if not trimmed:
+            raise ValueError("dice expression cannot be empty")
+
+        if any(char.isspace() for char in trimmed):
+            raise ValueError("dice expression must not contain whitespace")
+
+        pattern = re.compile(r"^(\d+)[dD](\d+)([+-]\d+)?$")
+        match = pattern.fullmatch(trimmed)
+        if not match:
+            raise ValueError("dice expression not well formed")
+
+        dice_count = int(match.group(1))
+        dice_type = int(match.group(2))
+        if dice_count < 1:
+            raise ValueError("dice count must be >= 1")
+        if dice_type < 1:
+            raise ValueError("dice type must be >= 1")
 
     def roll(self, roll: str) -> int:
         self.validate(roll)
@@ -120,4 +113,3 @@ class DiceRoller():
             modifier_str = token.split("-")[1]
             result = int(modifier_str) * -1
         return result
-
