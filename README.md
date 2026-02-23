@@ -1,73 +1,140 @@
-# Dice Roller
+# DiceRoller
 
-This repository implements a simple dice-rolling engine that parses expressions
-like `2d6+1` and produces consistent totals. `DiceRoller` validates expressions,
-rolls the requested dice using an injectable random provider, and stores the
-details in `DiceRollerData` so callers can inspect each die result, the
-modifier, and the final total.
+A lightweight, test-driven dice rolling engine and CLI tool.
 
-## Usage
+`diceroller` parses expressions like `2d6+1`, validates them against a strict
+grammar, rolls the dice, and returns structured results. It supports verbose and
+JSON output modes, making it useful both for tabletop sessions and scripting.
 
-1. Import `DiceRoller` (and `CustomRandom` if you need deterministic behavior in
-   tests).
-2. Call `validate(expression)` to ensure user input follows the supported
-   format: `<dice_count>[d|D]<dice_type>[+|-<modifier>]` with no internal
-   whitespace and positive integers for the count and type.
-3. Call `roll(expression)` to execute the dice rolls; the injector lets unit
-   tests control randomness.
-4. Inspect `diceRollerData.rolls`, `.modifier`, and `.total` after rolling if
-   you need the breakdown.
+---
 
-## Testing
+## Features
 
-Run the current test suite with:
+- Strict input validation (`<count>d<sides>[+|-modifier]`)
+- Case-insensitive `d` (`2D6` works)
+- No internal whitespace allowed
+- Deterministic testing via injectable random provider
+- CLI interface
+- `--verbose` human-readable output
+- `--json` machine-readable output
+- Fully unit tested
+
+---
+
+## Installation
+
+Clone the repo and install in editable mode:
+
+```bash
+pip install -e .
+```
+
+This installs the `diceroller` command into your virtual environment.
+
+---
+
+## CLI Usage
+
+### Basic Roll
+
+```bash
+$ diceroller 2d6+1
+7
+```
+
+### Verbose Output
+
+```bash
+$ diceroller 2d6+1 --verbose
+Rolls: [3, 3]
+Modifier: 1
+Total: 7
+```
+
+### JSON Output
+
+```bash
+$ diceroller 2d6+1 --json
+{"rolls": [3, 3], "modifier": 1, "total": 7}
+```
+
+---
+
+## Supported Expression Format
 
 ```
-PYTHONPATH=$(pwd) pytest -q
+<dice_count>[d|D]<dice_type>[+|-<modifier>]
 ```
 
-`PYTHONPATH` must include the project root so `tests` can import `diceroller`.
+### Rules
 
-## Extending
+- `dice_count` must be ≥ 1  
+- `dice_type` must be ≥ 1  
+- `modifier` is optional and may be negative  
+- No internal whitespace allowed  
+- Leading/trailing whitespace is ignored  
 
-- Add new expression formats by updating `DiceRoller.validate` and reusing the
-  existing parsing helpers.
-- Replace `CustomRandom` in production code if you need a different randomness
-  source.
-- Add tests whenever you change parsing/validation so regressions are caught
-  quickly.
+### Valid Examples
 
-## Example expressions
+| Expression | Meaning                      |
+|------------|------------------------------|
+| `1d6`      | Roll one six-sided die       |
+| `2D8`      | Roll two eight-sided dice    |
+| `3d4-1`    | Roll three d4 and subtract 1 |
+| `10d20+5`  | Roll ten d20 and add 5       |
 
-| Expression | Meaning                                | Sample result             |
-|------------|----------------------------------------|---------------------------|
-| `1d6`      | Roll one six-sided die                 | 4 → total `4`             |
-| `2d8+3`    | Roll two eight-sided dice, add 3       | 5 + 7 + 3 → total `15`    |
-| `3D4-1`    | Roll three four-sided dice, subtract 1 | 2 + 1 + 3 - 1 → total `5` |
+### Invalid Examples
 
-Run any expression through `roll()` after `validate()` to see its breakdown in
-`DiceRollerData`.
+- `d6`
+- `2d`
+- `0d6`
+- `1d0`
+- `1d6++2`
+- `1d6 + 2`
 
-## Getting started
+---
 
-```python3
-from diceroller import DiceRoller
+## Running Tests
+
+After installing editable:
+
+```bash
+pytest
+```
+
+The test suite covers:
+
+- Expression validation
+- Edge cases
+- Modifier handling
+- Multi-die rolls
+- Deterministic random injection
+
+---
+
+## Architecture
+
+Core logic is isolated from the CLI:
+
+```
+src/diceroller/
+├── core.py   # Validation and rolling logic
+└── cli.py    # Command-line interface
+```
+
+This separation keeps the dice engine reusable and independently testable.
+
+---
+
+## Programmatic Usage
+
+```python
+from diceroller.core import DiceRoller
 
 roller = DiceRoller()
-expression = "2d6+1"
-roller.validate(expression)
-total = roller.roll(expression)
+total = roller.roll("2d6+1")
 
-print(f"rolls: {roller.data.rolls}")
-print(f"modifier: {roller.data.modifier}")
-print(f"total: {total}")
+print(roller.data.rolls)
+print(roller.data.modifier)
+print(total)
 ```
-
-The above snippet validates an expression, executes it, and prints each die, the
-modifier, and the total.
-- Add new expression formats by updating `DiceRoller.validate` and reusing the
-  existing parsing helpers.
-- Replace `CustomRandom` in production code if you need a different randomness
-  source.
-- Add tests whenever you change parsing/validation so regressions are caught
-  quickly.
