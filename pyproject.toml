@@ -1,0 +1,7 @@
+[project]
+name = "diceroller"
+version = "0.1.0"
+dependencies = []
+
+[project.scripts]
+diceroller = "diceroller.cli:main"
