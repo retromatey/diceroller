@@ -74,7 +74,7 @@ class DiceRoller():
         dice_count, dice_type, dice_modifier = self.validate(roll)
         self.diceRollerData.clear()
         rolls = []
-        for roll in range(0, dice_count):
+        for _ in range(0, dice_count):
             rolls.append(self.rand.randint(1, dice_type))
         roll_total = sum(rolls)
         total = roll_total + dice_modifier
