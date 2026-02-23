@@ -46,9 +46,7 @@ $ diceroller 2d6+1
 
 ```bash
 $ diceroller 2d6+1 --verbose
-Rolls: [3, 3]
-Modifier: 1
-Total: 7
+7 ( 3 3 +1 )
 ```
 
 ### JSON Output
