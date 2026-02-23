@@ -117,9 +117,11 @@ def test_roll_multiple_dice_with_modifier():
     "2d8",
     "2d6+0",
     "2D8",
+    "2D8+2",
     "10d20",
     "1d6+2",
     "3d4-1",
+    "01d06",
     " 3d4-1 ",
 ])
 def test_validate_accepts_valid_input(expression):
@@ -135,6 +137,12 @@ def test_validate_accepts_valid_input(expression):
     "abc",
     "2d6d4",
     "1d6 + 2",  # (whitespace not allowed inside expression)
+    " 1 d6",    # (whitespace not allowed inside expression)
+    "1 d6",     # (whitespace not allowed inside expression)
+    "1d 6",     # (whitespace not allowed inside expression)
+    "1d6+ 2",   # (whitespace not allowed inside expression)
+    "1d6 -2",   # (whitespace not allowed inside expression)
+    "1d6 - 2",  # (whitespace not allowed inside expression)
     "0d6",      # (count must be >= 1)
     "-1d6",     # (count must be >= 1)
     "1d0",      # (type must be >= 1)
