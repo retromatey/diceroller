@@ -1,6 +1,5 @@
 import random
 import re
-import re
 
 class CustomRandom():
     def __init__(self):
@@ -38,11 +37,11 @@ class DiceRollerData():
         return result
 
 class DiceRoller():
-    def __init__(self, customRandom = CustomRandom()):
-        self.rand = customRandom
+    def __init__(self, customRandom = None):
+        self.rand = customRandom or CustomRandom()
         self.diceRollerData = DiceRollerData()
 
-    def validate(self, expression: str) -> None:
+    def validate(self, expression: str) -> tuple[int, int, int]:
         """Raise ValueError if the dice expression is invalid."""
         # Supported format for expression:
         # <dice_count>[d|D]<dice_type>[+|-<modifier>]
@@ -50,7 +49,6 @@ class DiceRoller():
         #   - dice_count is a positive integer (>= 1)
         #   - dice_type is a positive integer (>= 1)
         #   - modifier is an integer (optional, can be negative)
-        #   - "d" can be both lowercase or uppercase
         trimmed = expression.strip()
         if not trimmed:
             raise ValueError("dice expression cannot be empty")
@@ -65,17 +63,16 @@ class DiceRoller():
 
         dice_count = int(match.group(1))
         dice_type = int(match.group(2))
+        modifier = int(match.group(3) or 0)
         if dice_count < 1:
             raise ValueError("dice count must be >= 1")
         if dice_type < 1:
             raise ValueError("dice type must be >= 1")
+        return (dice_count, dice_type, modifier)
 
     def roll(self, roll: str) -> int:
-        self.validate(roll)
+        dice_count, dice_type, dice_modifier = self.validate(roll)
         self.diceRollerData.clear()
-        dice_count = self.parse_dice_count(roll)
-        dice_type = self.parse_dice_type(roll)
-        dice_modifier = self.parse_dice_modifier(roll)
         rolls = []
         for roll in range(0, dice_count):
             rolls.append(self.rand.randint(1, dice_type))
@@ -83,33 +80,3 @@ class DiceRoller():
         total = roll_total + dice_modifier
         self.diceRollerData.set(rolls, dice_modifier, total)
         return total
-
-    def parse_dice_count(self, roll: str) -> int:
-        tokens = roll.split("d")
-        count_str = tokens[0]
-        count = int(count_str)
-        return count
-
-    def parse_dice_type(self, roll: str) -> int:
-        tokens = roll.split("d")
-        token = tokens[1]
-        dice_type_str = ""
-        for char in token:
-            if char.isdigit():
-                dice_type_str += char
-            else:
-                break
-        dice_type = int(dice_type_str)
-        return dice_type
-
-    def parse_dice_modifier(self, roll: str) -> int:
-        result = 0
-        tokens = roll.split("d")
-        token = tokens[1]
-        if "+" in token:
-            modifier_str = token.split("+")[1]
-            result = int(modifier_str)
-        elif "-" in token:
-            modifier_str = token.split("-")[1]
-            result = int(modifier_str) * -1
-        return result
