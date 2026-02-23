@@ -58,8 +58,8 @@ expression = "2d6+1"
 roller.validate(expression)
 total = roller.roll(expression)
 
-print(f"rolls: {roller.diceRollerData.rolls}")
-print(f"modifier: {roller.diceRollerData.modifier}")
+print(f"rolls: {roller.data.rolls}")
+print(f"modifier: {roller.data.modifier}")
 print(f"total: {total}")
 ```
 
