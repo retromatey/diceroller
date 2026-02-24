@@ -56,6 +56,15 @@ $ diceroller 2d6+1 --json
 {"rolls": [3, 3], "modifier": 1, "total": 7}
 ```
 
+### Seeded Rolls
+
+```bash
+$ diceroller 2d6+1 --seed 42
+7
+```
+
+Adding `--seed` followed by an integer seeds the internal RNG so repeated rolls yield the same sequence.
+
 ---
 
 ## Supported Expression Format

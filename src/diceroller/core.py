@@ -40,6 +40,14 @@ class DiceRollerData():
         result = f"{self.total} ( {result}{modifier_str})"
         return result
 
+    def to_dict(self) -> dict:
+        return {
+            "rolls": self.rolls,
+            "modifier": self.modifier,
+            "total": self.total,
+            "dice_type": self.dice_type,
+        }
+
 class DiceRoller():
     def __init__(self, custom_rng: Optional[CustomRandom] = None):
         self.rng = CustomRandom() if custom_rng is None else custom_rng
