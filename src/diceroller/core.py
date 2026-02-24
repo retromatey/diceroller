@@ -1,25 +1,29 @@
 import random
 import re
+from typing import Optional
 
 class CustomRandom():
-    def __init__(self):
-        random.seed()
+    def __init__(self, seed: Optional[int] = None):
+        self._rnd = random.Random() if seed is None else random.Random(seed)
 
     def randint(self, start: int, end: int) -> int:
-        return random.randint(start, end)
+        return self._rnd.randint(start, end)
 
 class DiceRollerData():
     def __init__(self):
+        self.dice_type = 0
         self.rolls = []
         self.modifier = 0
         self.total = 0
 
-    def clear(self):
+    def clear(self) -> None:
+        self.dice_type = 0
         self.rolls = []
         self.modifier = 0
         self.total = 0
 
-    def set(self, rolls: list[int], modifier: int, total: int):
+    def set(self, rolls: list[int], modifier: int, total: int, dice_type: int) -> None:
+        self.dice_type = dice_type
         self.rolls = [x for x in rolls]
         self.modifier = modifier
         self.total = total
@@ -37,12 +41,12 @@ class DiceRollerData():
         return result
 
 class DiceRoller():
-    def __init__(self, customRandom = None):
-        self.rand = customRandom or CustomRandom()
+    def __init__(self, custom_rng: Optional[CustomRandom] = None):
+        self.rng = CustomRandom() if custom_rng is None else custom_rng
         self.diceRollerData = DiceRollerData()
 
     @property
-    def data(self):
+    def data(self) -> DiceRollerData:
         return self.diceRollerData
 
     def validate(self, expression: str) -> tuple[int, int, int]:
@@ -79,8 +83,8 @@ class DiceRoller():
         self.diceRollerData.clear()
         rolls = []
         for _ in range(0, dice_count):
-            rolls.append(self.rand.randint(1, dice_type))
+            rolls.append(self.rng.randint(1, dice_type))
         roll_total = sum(rolls)
         total = roll_total + dice_modifier
-        self.diceRollerData.set(rolls, dice_modifier, total)
+        self.diceRollerData.set(rolls, dice_modifier, total, dice_type)
         return total
