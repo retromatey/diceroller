@@ -1,18 +1,19 @@
 import random
 import re
-from typing import Optional
+from typing import Any
 
-class CustomRandom():
-    def __init__(self, seed: Optional[int] = None):
+
+class CustomRandom:
+    def __init__(self, seed: int | None = None):
         self._rnd = random.Random() if seed is None else random.Random(seed)
 
     def randint(self, start: int, end: int) -> int:
         return self._rnd.randint(start, end)
 
-class DiceRollerData():
-    def __init__(self):
+class DiceRollerData:
+    def __init__(self) -> None:
         self.dice_type = 0
-        self.rolls = []
+        self.rolls: list[int] = []
         self.modifier = 0
         self.total = 0
 
@@ -40,7 +41,7 @@ class DiceRollerData():
         result = f"{self.total} ( {result}{modifier_str})"
         return result
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "rolls": self.rolls,
             "modifier": self.modifier,
@@ -48,8 +49,8 @@ class DiceRollerData():
             "dice_type": self.dice_type,
         }
 
-class DiceRoller():
-    def __init__(self, custom_rng: Optional[CustomRandom] = None):
+class DiceRoller:
+    def __init__(self, custom_rng: CustomRandom | None = None):
         self.rng = CustomRandom() if custom_rng is None else custom_rng
         self.diceRollerData = DiceRollerData()
 

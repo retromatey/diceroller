@@ -1,12 +1,14 @@
-from typing import override
-from diceroller.core import DiceRoller, CustomRandom
 import pytest
+from typing_extensions import override
+
+from diceroller.core import CustomRandom, DiceRoller
+
 
 class CustomRandomMoc(CustomRandom):
-    def __init__(self):
+    def __init__(self) -> None:
         self.randint_return_value = 0
 
-    def randint_returns(self, value: int):
+    def randint_returns(self, value: int) -> None:
         self.randint_return_value = value
 
     @override
@@ -22,7 +24,7 @@ class CustomRandomMoc(CustomRandom):
         ("2d6+3", 3, 9),
     ],
 )
-def test_roll_valid_cases(expression, mock_value, expected):
+def test_roll_valid_cases(expression: str, mock_value: int, expected: int) -> None:
     moc = CustomRandomMoc()
     moc.randint_returns(mock_value)
     dr = DiceRoller(moc)
@@ -42,8 +44,8 @@ def test_roll_valid_cases(expression, mock_value, expected):
     "01d06",
     " 3d4-1 ",
 ])
-def test_validate_accepts_valid_input(expression):
-    dr = DiceRoller(...)
+def test_validate_accepts_valid_input(expression: str) -> None:
+    dr = DiceRoller()
     dr.validate(expression)  # should not raise
 
 @pytest.mark.parametrize("expression", [
@@ -66,8 +68,8 @@ def test_validate_accepts_valid_input(expression):
     "1d0",      # (type must be >= 1)
     "1d-6",     # (type must be >= 1)
 ])
-def test_validate_rejects_malformed_input(expression):
-    dr = DiceRoller(...)
+def test_validate_rejects_malformed_input(expression: str) -> None:
+    dr = DiceRoller()
     with pytest.raises(ValueError):
         dr.validate(expression)
 
@@ -78,7 +80,7 @@ def test_validate_rejects_malformed_input(expression):
     "1d6--2",
     "1d6++2",
 ])
-def test_validate_rejects_invalid_modifier(expression):
-    dr = DiceRoller(...)
+def test_validate_rejects_invalid_modifier(expression: str) -> None:
+    dr = DiceRoller()
     with pytest.raises(ValueError):
         dr.validate(expression)

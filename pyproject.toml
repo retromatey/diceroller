@@ -1,7 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "diceroller"
-version = "0.1.0"
+version = "0.1.2"
+description = "A simple and extensible dice rolling library."
+readme = "README.md"
+authors = [
+    { name = "Jason Tennant" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
 dependencies = []
 
 [project.scripts]
 diceroller = "diceroller.cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+    "build",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# ----------------------------
+# Ruff Configuration
+# ----------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]  
+# E/F = basic lint
+# I = import sorting
+# UP = pyupgrade (modernizes syntax)
+
+# ----------------------------
+# MyPy Configuration
+# ----------------------------
+[tool.mypy]
+python_version = "3.10"
+strict = true
+ignore_missing_imports = true

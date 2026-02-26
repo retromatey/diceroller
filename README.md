@@ -15,8 +15,10 @@ JSON output modes, making it useful both for tabletop sessions and scripting.
 - No internal whitespace allowed
 - Deterministic testing via injectable random provider
 - CLI interface
+- `--version` show version of diceroller
 - `--verbose` human-readable output
 - `--json` machine-readable output
+- `--seed` optional seed for deterministic dice rolls
 - Fully unit tested
 
 ---
@@ -53,7 +55,15 @@ $ diceroller 2d6+1 --verbose
 
 ```bash
 $ diceroller 2d6+1 --json
-{"rolls": [3, 3], "modifier": 1, "total": 7}
+{
+  "rolls": [
+    6,
+    3
+  ],
+  "modifier": 1,
+  "total": 10,
+  "dice_type": 6
+}
 ```
 
 ### Seeded Rolls
