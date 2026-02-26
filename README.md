@@ -1,3 +1,5 @@
+[![CI](https://github.com/retromatey/diceroller/actions/workflows/ci.yml/badge.svg)](https://github.com/retromatey/diceroller/actions/workflows/ci.yml) 
+ 
 # DiceRoller
 
 A lightweight, test-driven dice rolling engine and CLI tool.
