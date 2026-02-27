@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DiceRoller — Command line + API dice simulator</title>
+    <style>
+      body {
+        font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #07090f;
+        color: #f7f9fc;
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 4rem 1.5rem 5rem;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      header h1 {
+        font-size: clamp(2.25rem, 3vw, 3rem);
+        margin: 0.2rem 0;
+      }
+      header p {
+        margin: 0.5rem auto;
+        max-width: 640px;
+        line-height: 1.6;
+        color: #b5b7c6;
+      }
+      .badges {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 1.25rem;
+      }
+      section {
+        margin-bottom: 3rem;
+      }
+      section h2 {
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      section p {
+        line-height: 1.65;
+        color: #d3d5e1;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-top: 1rem;
+      }
+      .card {
+        background: #111528;
+        border-radius: 12px;
+        padding: 1.25rem;
+        border: 1px solid #1f2230;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      }
+      .code-block {
+        background: #0f1625;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        border: 1px solid #1f2230;
+        font-family: "JetBrains Mono", "Fira Code", monospace;
+        overflow-x: auto;
+      }
+      .code-block code {
+        display: block;
+        color: #fff;
+        white-space: pre-wrap;
+      }
+      footer {
+        text-align: center;
+        color: #6e7287;
+        font-size: 0.85rem;
+        border-top: 1px solid #1f2230;
+        padding-top: 2rem;
+      }
+      a {
+        color: #7dd1ff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <p>“Roll with confidence — from tabletop RPGs to stats simulations.”</p>
+        <h1>DiceRoller</h1>
+        <div class="badges">
+          <a href="https://github.com/retromatey/diceroller/actions/workflows/ci.yml">
+            <img src="https://github.com/retromatey/diceroller/actions/workflows/ci.yml/badge.svg" alt="CI status"/>
+          </a>
+          <a href="https://codecov.io/github/retromatey/diceroller">
+            <img src="https://codecov.io/github/retromatey/diceroller/graph/badge.svg?token=B7K88GPB5Z" alt="Codecov coverage"/>
+          </a>
+          <a href="https://github.com/retromatey/diceroller/releases">
+            <img src="https://img.shields.io/github/v/release/retromatey/diceroller" alt="Latest release"/>
+          </a>
+          <a href="https://github.com/retromatey/diceroller/blob/main/LICENSE">
+            <img src="https://img.shields.io/github/license/retromatey/diceroller" alt="License"/>
+          </a>
+        </div>
+      </header>
+
+      <section>
+        <h2>Overview</h2>
+        <p>
+          DiceRoller is a lightweight, test-driven library plus CLI for evaluating
+          standard dice expressions such as <code>3d6+2</code>. It targets tabletop
+          gamers, game masters, and developers who need predictable dice simulations
+          in scripts or services. The single engine validates expressions, rolls dice,
+          and exposes details (rolls, modifier, total) through <code>DiceRollerData</code>.
+        </p>
+        <p>
+          The CLI mirrors the API, so you can invoke it on the command line or embed
+          the core logic in your own Python code without duplicating grammar rules.
+        </p>
+      </section>
+
+      <section>
+        <h2>Installation</h2>
+        <p>
+          Download a release wheel from the GitHub
+          <a href="https://github.com/retromatey/diceroller/releases">Releases</a> page
+          and install it via <code>pip install path/to/diceroller.whl</code>.
+          Alternatively, clone this repo and install in editable mode:
+        </p>
+        <div class="code-block">
+          <code>$ git clone https://github.com/retromatey/diceroller.git</code>
+          <code>$ cd diceroller</code>
+          <code>$ pip install -e .</code>
+        </div>
+        <p>
+          Editable installs are ideal when hacking on the CLI or trying new content
+          without rebuilding the wheel for every change.
+        </p>
+      </section>
+
+      <section>
+        <h2>Quick Start Examples</h2>
+        <div class="cards">
+          <div class="card">
+            <h3>CLI Example</h3>
+            <p>Roll a typical D&D expression:</p>
+            <div class="code-block">
+              <code>$ diceroller --verbose 3d6+2</code>
+              <code>12 ( 4 3 5 +2 )</code>
+            </div>
+            <p>The CLI supports <code>--verbose</code> and <code>--json</code> for rich output.</p>
+          </div>
+          <div class="card">
+            <h3>Python API</h3>
+            <div class="code-block">
+              <code>from diceroller.core import DiceRoller, CustomRandom</code>
+              <code>roller = DiceRoller(custom_rng=CustomRandom(seed=42))</code>
+              <code>roller.validate("2d8-1")</code>
+              <code>total = roller.roll("2d8-1")</code>
+              <code>print(roller.data.rolls)</code>
+            </div>
+            <p>Inject <code>CustomRandom</code> for deterministic values in tests.</p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Features</h2>
+        <ul>
+          <li>Strict grammar for expressions like <code>&lt;count&gt;d&lt;sides&gt;[±modifier]</code>.</li>
+          <li>Cross-platform CLI with verbose, JSON, and seeded output.</li>
+          <li>Simple, inspectable <code>DiceRollerData</code> model for rolls/modifiers.</li>
+          <li>Extensible random source via <code>CustomRandom</code> so tests stay deterministic.</li>
+          <li>Validates input before rolling to catch malformed expressions early.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Detailed Usage</h2>
+        <p>
+          Expressions must consist of a positive number of dice and sides; use
+          modifiers to adjust totals. Examples include <code>01d06</code>, <code>4D10+3</code>,
+          and <code>2d20-5</code>. Avoid internal whitespace — the CLI trims only
+          leading/trailing spaces.
+        </p>
+        <p>
+          To integrate DiceRoller into another project, import the core module and rely
+          on the public methods: <code>validate()</code> returns the parsed components,
+          <code>roll()</code> executes the dice, and <code>data</code> exposes the breakdown.
+        </p>
+        <p>
+          When deterministic sequences are desired, call the CLI with <code>--seed</code>
+          or instantiate <code>CustomRandom(seed=&lt;n&gt;)</code>. Seeds allow reproducible
+          gameplay or automated testing scenarios.
+        </p>
+      </section>
+
+      <section>
+        <h2>Testing & Coverage</h2>
+        <p>
+          Run <code>pytest</code> locally to ensure the validation helpers, modifiers,
+          and multi-dice rolls behave as expected. The suite targets 100% coverage, giving
+          you confidence before releasing a new version.
+        </p>
+      </section>
+
+      <section>
+        <h2>Changelog & Releases</h2>
+        <p>
+          Releases are tracked via Git tags on GitHub. Each release corresponds to an
+          immutable package, so pin versions in your <code>requirements.txt</code> or
+          GitHub Actions workflow. Visit the
+          <a href="https://github.com/retromatey/diceroller/releases">Releases</a> page before
+          migrating to a newer version to view the release notes.
+        </p>
+      </section>
+
+      <footer>
+        Built with care for tabletop fans and developers alike.
+      </footer>
+    </div>
+  </body>
+</html>

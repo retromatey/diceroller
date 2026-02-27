@@ -1,6 +1,4 @@
-[![CI](https://github.com/retromatey/diceroller/actions/workflows/ci.yml/badge.svg)](https://github.com/retromatey/diceroller/actions/workflows/ci.yml) 
- 
-[![codecov](https://codecov.io/github/retromatey/diceroller/graph/badge.svg?token=B7K88GPB5Z)](https://codecov.io/github/retromatey/diceroller) 
+[![CI](https://github.com/retromatey/diceroller/actions/workflows/ci.yml/badge.svg)](https://github.com/retromatey/diceroller/actions/workflows/ci.yml) [![codecov](https://codecov.io/github/retromatey/diceroller/graph/badge.svg?token=B7K88GPB5Z)](https://codecov.io/github/retromatey/diceroller) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
  
 # DiceRoller
 
@@ -162,3 +160,12 @@ print(roller.data.rolls)
 print(roller.data.modifier)
 print(total)
 ```
+
+---
+
+## License
+
+Copyright Jason Tennant, 2026.
+
+Distributed under the terms of the MIT license, DiceRoller is free and open
+source software.

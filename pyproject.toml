@@ -10,7 +10,7 @@ readme = "README.md"
 authors = [
     { name = "Jason Tennant" }
 ]
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = []
 
