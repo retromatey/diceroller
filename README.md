@@ -32,7 +32,7 @@ JSON output modes, making it useful both for tabletop sessions and scripting.
 Clone the repo and install in editable mode:
 
 ```bash
-pip install -e .
+pip install -e .[dev]
 ```
 
 This installs the `diceroller` command into your virtual environment.
@@ -120,7 +120,10 @@ Adding `--seed` followed by an integer seeds the internal RNG so repeated rolls 
 After installing editable:
 
 ```bash
+ruff check .
+mypy .
 pytest
+python -m build
 ```
 
 The test suite covers:

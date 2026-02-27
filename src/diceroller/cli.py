@@ -1,20 +1,15 @@
 import argparse
 import json
-from pathlib import Path
-
-import tomllib
+from importlib.metadata import PackageNotFoundError, version
 
 from diceroller.core import CustomRandom, DiceRoller
 
 
 def _project_version() -> str:
-    root = Path(__file__).resolve().parents[2]
-    pyproject_path = root / "pyproject.toml"
-    if not pyproject_path.exists():
+    try:
+        return version("diceroller")  # must match [project].name in pyproject.toml
+    except PackageNotFoundError:
         return "unknown"
-    with pyproject_path.open("rb") as stream:
-        metadata = tomllib.load(stream)
-    return f'{metadata.get("project", {}).get("version", "unknown")}'
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Roll some dice 🎲")
