@@ -20,6 +20,7 @@ diceroller = "diceroller.cli:main"
 [project.optional-dependencies]
 dev = [
     "pytest",
+    "pytest-cov",
     "ruff",
     "mypy",
     "build",
