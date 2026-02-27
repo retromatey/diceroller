@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "diceroller"
-version = "0.1.2"
+version = "0.1.3"
 description = "A simple and extensible dice rolling library."
 readme = "README.md"
 authors = [
