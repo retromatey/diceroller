@@ -29,6 +29,9 @@ dev = [
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+"diceroller" = ["py.typed"]
+
 # ----------------------------
 # Ruff Configuration
 # ----------------------------
